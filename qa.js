@@ -47,7 +47,7 @@ const loadStore = async () => {
 
 const query = async () => {
   const store = await loadStore()
-  const results = await store.similaritySearch(question, 2)
+  const results = await store.similaritySearch(question, 1)
 
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo-16k-0613',
