@@ -1,19 +1,18 @@
-import 'dotenv/config'
+import { openai } from './openai.js'
+import { Document } from 'langchain/document'
 import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
-import { YoutubeLoader } from 'langchain/document_loaders/web/youtube'
 import { CharacterTextSplitter } from 'langchain/text_splitter'
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
-import { openai } from './openai.js'
+import { YoutubeLoader } from 'langchain/document_loaders/web/youtube'
 
 const question = process.argv[2] || 'hi'
-
 const video = `https://youtu.be/zR_iuq2evXo?si=cG8rODgRgXOx9_Cn`
 
 export const createStore = (docs) =>
   MemoryVectorStore.fromDocuments(docs, new OpenAIEmbeddings())
 
-export const docsFromYTVideo = async (video) => {
+export const docsFromYTVideo = (video) => {
   const loader = YoutubeLoader.createFromUrl(video, {
     language: 'en',
     addVideoInfo: true,
@@ -27,7 +26,7 @@ export const docsFromYTVideo = async (video) => {
   )
 }
 
-export const docsFromPDF = () => {
+const docsFromPDF = () => {
   const loader = new PDFLoader('xbox.pdf')
   return loader.loadAndSplit(
     new CharacterTextSplitter({
@@ -47,16 +46,16 @@ const loadStore = async () => {
 
 const query = async () => {
   const store = await loadStore()
-  const results = await store.similaritySearch(question, 1)
+  const results = await store.similaritySearch(question, 2)
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo-16k-0613',
+    model: 'gpt-3.5-turbo',
     temperature: 0,
     messages: [
       {
-        role: 'assistant',
+        role: 'system',
         content:
-          'You are a helpful AI assistant. Answser questions to your best ability.',
+          'You are a helpful AI assistant. Answer quesitons to the best of your abilities.',
       },
       {
         role: 'user',
@@ -67,10 +66,11 @@ const query = async () => {
       },
     ],
   })
+
   console.log(
     `Answer: ${response.choices[0].message.content}\n\nSources: ${results
       .map((r) => r.metadata.source)
-      .join(', ')}`
+      .join(',')}`
   )
 }
 

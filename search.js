@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import { openai } from './openai.js'
 import { Document } from 'langchain/document'
 import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
@@ -57,5 +57,4 @@ export const search = async (query, count = 1) => {
   const store = await createStore()
   return store.similaritySearch(query, count)
 }
-
-console.log(await search(''))
+console.log(await search('a movie that will make me feel like I am crazy'))
