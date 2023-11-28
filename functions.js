@@ -47,6 +47,8 @@ while (true) {
   response = await getCompletion(messages)
 
   if (response.choices[0].finish_reason === 'stop') {
+    console.log(response.choices[0])
+    console.log(response.choices[0].message)
     console.log(response.choices[0].message.content)
     break
   } else if (response.choices[0].finish_reason === 'function_call') {
