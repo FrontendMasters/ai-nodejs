@@ -7,10 +7,6 @@ This repo is a companion to the [Build AI-Powered Apps with OpenAI and Node.js][
 [fem]: https://www.frontendmasters.com
 [course]: https://frontendmasters.com/courses/openai-node/
 
-## Materials
-
-- [Course Notes](https://scottmoss.notion.site/AI-App-Node-js-f9a372a138ef4241943b4fbb44bdc970?pvs=4)
-
 
 ## Errata
 
